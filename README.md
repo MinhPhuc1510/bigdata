@@ -24,7 +24,7 @@ cd streamingProje
 python get_msg_kafka.py
 ```
 
-To get msg from kafka:
+To get message from kafka:
 
 ```
 cd streamingProje
