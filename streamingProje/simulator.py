@@ -3,19 +3,25 @@ import logging
 from kafka import KafkaProducer
 import json
 from datetime import datetime
+import pandas as pd
 
+data_df = pd.read_csv(r'C:\Users\Minh Phuc\Documents\Thạc sĩ\bigdata\project\data\daily_dataset.csv')
 
 producer = KafkaProducer(bootstrap_servers='localhost:9094', value_serializer=lambda v: json.dumps(v).encode('utf-8'))
-for id in range(10):
-    key = "key_1"
+for id in range(1000):
+    key = "iot_key_1"
     value = {
-        "lclid": str(id),
-        "day": str(datetime.strptime("12/15/2011", "%m/%d/%Y")),
-        "energy_max": 10.2,
-        "energy_min": 10.3,
-        "energy_sum": 10.4
+        "id": id,
+        "lclid": data_df["LCLid"][id],
+        "day": str(datetime.strptime(data_df['day'][id], "%Y-%m-%d")),
+        "energy_max": data_df['energy_max'][id],
+        "energy_min": data_df['energy_min'][id],
+        "energy_sum": data_df['energy_sum'][id],
+        "energy_median": data_df['energy_median'][id],
+        "energy_std": data_df['energy_std'][id],
+
     }
-    future = producer.send('iot_02', value=value, key=b'key_1')
+    future = producer.send('iot_03', value=value, key=b'key_1')
     try:
         result = future.get(timeout=60)
         print(result)

@@ -1,13 +1,16 @@
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, FloatType, StringType
+from pyspark.sql.types import StructType, StructField, FloatType, StringType, IntegerType
 from pyspark.sql.functions import from_json, col
 
 iotSchema = StructType([
+    StructField("id", IntegerType(), False),
     StructField("lclid", StringType(), False),
     StructField("day", StringType(), False),
     StructField("energy_max", FloatType(), False),
     StructField("energy_min", FloatType(), False),
     StructField("energy_sum", FloatType(), False),
+    StructField("energy_median", FloatType(), False),
+    StructField("energy_std", FloatType(), False),
 ])
 
 
@@ -25,7 +28,7 @@ df = spark \
     .readStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "172.18.0.4:9092") \
-    .option("subscribe", "iot_02") \
+    .option("subscribe", "iot_03") \
     .option("delimeter", ",") \
     .option("startingOffsets", "earliest") \
     .load()
